@@ -8,6 +8,7 @@
 void account(void);
 void initTermios(int echo);
 void resetTermios(void);
+void accountCreated(void);
 
 // Creating a structure to store data of the user
 struct pass {
@@ -143,7 +144,7 @@ void account (void) {
 	// Closing file
     	fclose(fp);
 
-	printf("End of account function");
+	accountCreated();
 }
 
 
@@ -163,4 +164,30 @@ void initTermios(int echo) {
 /* Restore old terminal i/o settings */
 void resetTermios(void) {
   	tcsetattr(0, TCSANOW, &old);
+}
+
+//successful account creation
+void accountCreated(void) {
+	int i;
+	char ch;
+
+	system("clear");
+	printf("PLEASE WAIT....\n\nYOUR DATA IS PROCESSING...." );
+
+	for ( i = 0; i < 200000000; i++ ) {
+		i++;
+		i--;
+	}
+
+	gotoxy(30,10);
+	printf("ACCOUNT CREATED SUCCESSFULY....");
+
+	gotoxy(0,20);
+	printf("Press enter to login\n");
+
+	initTermios(0);
+	getchar();
+	resetTermios();
+
+	printf("end of accountCreated function");
 }
