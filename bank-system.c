@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
+#include <string.h>
 
 #define gotoxy(x,y) printf("\033[%d;%dH", (y),(x))
 
@@ -9,6 +10,7 @@ void account(void);
 void initTermios(int echo);
 void resetTermios(void);
 void accountCreated(void);
+void login(void);
 
 // Creating a structure to store data of the user
 struct pass {
@@ -189,5 +191,62 @@ void accountCreated(void) {
 	getchar();
 	resetTermios();
 
-	printf("end of accountCreated function");
+	login();
+}
+
+void login(void) {
+	system("clear");
+
+	char username[50];
+	char password[50];
+	int i,j,k;
+	char ch;
+	FILE *fp,*fu;
+	struct pass u1;
+	struct userpass u2;
+
+	//opening file of user data
+	fp = fopen("username.txt","rb");
+	if (fp == NULL) {
+		printf("ERROR IN OPENING FILE");
+	}
+
+	gotoxy(34,2);
+	printf("ACCOUNT LOGIN");
+
+	gotoxy(7, 5);
+    	printf("***********************************************""********************************");
+	gotoxy(35, 10);
+
+    	printf("==== LOG IN ====");
+
+	gotoxy(35, 12);
+    	printf("USERNAME.. ");
+    	scanf("%s", &username);
+
+    	gotoxy(35, 14);
+    	printf("PASSWORD..");
+	initTermios(0);	
+    	for (i = 0; i < 50; i++) {
+        	ch = getchar();
+        	if (ch != 10) {
+           		password[i] = ch;
+            		ch = '*';
+            		printf("%c", ch);
+        	}
+        	else break;
+	}	
+	resetTermios();
+
+	// Checking if username exists in the file or not
+	while (fread(&u1, sizeof(u1), 1, fp)) {
+        	if (strcmp(username,u1.username) == 0) {
+            		printf("login successful\n");
+			//loginsu();
+            		//display(username);
+        	}
+    	}
+ 
+    	// Closing the file
+    	fclose(fp);
 }
