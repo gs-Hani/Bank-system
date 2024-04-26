@@ -12,6 +12,7 @@ void resetTermios(void);
 void accountCreated(void);
 void login(void);
 void loginsu(void);
+void display(char*);
 
 // Creating a structure to store data of the user
 struct pass {
@@ -243,8 +244,8 @@ void login(void) {
 	while (fread(&u1, sizeof(u1), 1, fp)) {
         	if (strcmp(username,u1.username) == 0) {
             		printf("login successful\n");
-			//loginsu();
-            		//display(username);
+			loginsu();
+            		display(username);
         	}
     	}
  
@@ -355,7 +356,7 @@ void display(char username1[]) {
 
 	switch (choice) {
     		case 1:
-        		checkbalance(username1);
+        		checkBalance(username1);
         		break;
 
     		case 4:
@@ -363,3 +364,62 @@ void display(char username1[]) {
         		break;
     	}
 }
+
+// Function to check balance in users account
+void checkBalance(char username2[]) {
+	system ("clear");
+
+	FILE *fm;
+	struct money m1;
+	char ch;
+	int i = 1, summoney = 0;
+
+	//Opening amount file record
+	fm = fopen("mon.txt", "rv");
+
+	int k = 5,  l = 10;
+	int m = 30, n = 10;
+	int u = 50, v = 10;
+	
+	gotoxy(30, 2);
+    	printf("==== BALANCE DASHBOARD ====");
+    	gotoxy(30, 3);
+    	printf("***************************");
+    	gotoxy(k, l);
+    	printf("S no.");
+    	gotoxy(m, n);
+    	printf("TRANSACTION ID");
+    	gotoxy(u, v);
+    	printf("AMOUNT");
+
+	while (fread(&m1, sizeof(m1),1,fm)) {
+		if (strcmp(username2, m1.usernameto) == 0) {
+			gotoxy(k, ++l);
+			printf("%d", i);
+            		i++;
+
+			gotoxy(m, ++n);
+            		printf("%s", m1.userpersonfrom);
+
+			gotoxy(u, ++v);
+            		printf("%d", m1.money1);
+
+			// Adding and finding total money
+            		summoney = summoney + m1.money1;
+		}
+	}
+	
+	gotoxy(80, 10);
+    	printf("TOTAL AMOUNT");
+ 
+    	gotoxy(80, 12);
+    	printf("%d", summoney);
+	
+	initTermios(0);
+	getchar();
+	resetTermios();
+
+	// Closing file after reading it
+    	fclose(fm);
+    	display(username2);
+}	
