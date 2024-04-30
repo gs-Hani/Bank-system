@@ -6,14 +6,19 @@
 #define gotoxy(x,y) printf("\033[%d;%dH", (y),(x))
 
 // Declaring all the functions
+
+// Level 1 
 void account(void);
-void initTermios(int echo);
-void resetTermios(void);
-void accountCreated(void);
 void login(void);
+// Level 2
+void accountCreated(void);
 void loginsu(void);
 void display(char*);
-
+// Level 3
+void checkBalance(char*);
+// Level 4
+void initTermios(int echo);
+void resetTermios(void);
 // Creating a structure to store data of the user
 struct pass {
     char username[50];
@@ -31,9 +36,19 @@ struct pass {
 struct userpass {
     char password[50];
 };
+
+// Structure to keep track of amount transfer
+struct money {
+    char usernameto[50];
+    char userpersonfrom[50];
+    long int money1;
+};
 // This struct is used to change the i/o settings 
 static struct termios old, current;
 
+//*******************
+//Level 0
+//*******************
 int main() {
 
 	int i,a,b,choice;
@@ -68,10 +83,24 @@ int main() {
 			printf("\n\n USERNAME 50 CHARACTERS MAX!!");
        		 	printf("\n\n PASSWORD 50 CHARACTERS MAX!!");
         		account();
-        		break;		
+        		break;
+		case 2:
+			login();
+			break;
+		case 3:
+			exit(0);
+			break;
+			
+			initTermios(0);	
+			getchar();
+			resetTermios();		
 	}
 
 }
+
+//*******************
+//Level 1
+//*******************
 
 // Function to create accounts of users
 void account (void) {
@@ -151,51 +180,7 @@ void account (void) {
 	accountCreated();
 }
 
-
-/* Initialize new terminal i/o settings */
-void initTermios(int echo) {
-	tcgetattr(0, &old);	/* grab old terminal i/o settings */
-	current = old; 		/* make new settings same as old settings */
-  	current.c_lflag &= ~ICANON;	/* disable buffered i/o */
-  	if (echo) {
-      		current.c_lflag |= ECHO; 	/* set echo mode */
-  	} else {
-      		current.c_lflag &= ~ECHO; 	/* set no echo mode */
-  	}
-  		tcsetattr(0, TCSANOW, &current); 	/* use these new terminal i/o settings now */
-}
-
-/* Restore old terminal i/o settings */
-void resetTermios(void) {
-  	tcsetattr(0, TCSANOW, &old);
-}
-
-//successful account creation
-void accountCreated(void) {
-	int i;
-	char ch;
-
-	system("clear");
-	printf("PLEASE WAIT....\n\nYOUR DATA IS PROCESSING...." );
-
-	for ( i = 0; i < 200000000; i++ ) {
-		i++;
-		i--;
-	}
-
-	gotoxy(30,10);
-	printf("ACCOUNT CREATED SUCCESSFULY....");
-
-	gotoxy(0,20);
-	printf("Press enter to login\n");
-
-	initTermios(0);
-	getchar();
-	resetTermios();
-
-	login();
-}
-
+// Login Function
 void login(void) {
 	system("clear");
 
@@ -252,6 +237,38 @@ void login(void) {
     	// Closing the file
     	fclose(fp);
 }
+
+
+//*******************
+//Level 2
+//*******************
+
+//successful account creation
+void accountCreated(void) {
+	int i;
+	char ch;
+
+	system("clear");
+	printf("PLEASE WAIT....\n\nYOUR DATA IS PROCESSING...." );
+
+	for ( i = 0; i < 200000000; i++ ) {
+		i++;
+		i--;
+	}
+
+	gotoxy(30,10);
+	printf("ACCOUNT CREATED SUCCESSFULY....");
+
+	gotoxy(0,20);
+	printf("Press enter to login\n");
+
+	initTermios(0);
+	getchar();
+	resetTermios();
+
+	login();
+}
+
 
 // Redirect after successful login
 void loginsu(void) {
@@ -365,6 +382,10 @@ void display(char username1[]) {
     	}
 }
 
+//*******************
+//Level 3
+//*******************
+
 // Function to check balance in users account
 void checkBalance(char username2[]) {
 	system ("clear");
@@ -422,4 +443,26 @@ void checkBalance(char username2[]) {
 	// Closing file after reading it
     	fclose(fm);
     	display(username2);
-}	
+}
+
+//*******************
+//Level 4
+//*******************
+
+/* Initialize new terminal i/o settings */
+void initTermios(int echo) {
+	tcgetattr(0, &old);	/* grab old terminal i/o settings */
+	current = old; 		/* make new settings same as old settings */
+  	current.c_lflag &= ~ICANON;	/* disable buffered i/o */
+  	if (echo) {
+      		current.c_lflag |= ECHO; 	/* set echo mode */
+  	} else {
+      		current.c_lflag &= ~ECHO; 	/* set no echo mode */
+  	}
+  		tcsetattr(0, TCSANOW, &current); 	/* use these new terminal i/o settings now */
+}
+
+/* Restore old terminal i/o settings */
+void resetTermios(void) {
+  	tcsetattr(0, TCSANOW, &old);
+}
