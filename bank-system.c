@@ -17,6 +17,7 @@ void display(char*);
 // Level 3
 void checkBalance(char*);
 void transferMoney(void);
+void logout(void);
 // Level 4
 void initTermios(int echo);
 void resetTermios(void);
@@ -379,10 +380,10 @@ void display(char username1[]) {
 		case 2:
 			transferMoney();
 			break;
-		//case 3:
-		//	logout();
-		//	login();
-		//	break;
+		case 3:
+			logout();
+			login();
+			break;
 
     		case 4:
         		exit(0);
@@ -396,7 +397,7 @@ void display(char username1[]) {
 
 // Function to check balance in users account
 void checkBalance(char username2[]) {
-	system ("clear");
+	system("clear");
 
 	FILE *fm;
 	struct money m1;
@@ -530,6 +531,32 @@ void transferMoney(void)
 	// Function to return to the home screen
     	display(usernamet);
 
+}
+
+void logout(void) {
+	int i,j;
+
+	system("clear");
+	printf("please wait, logging out");
+
+	for( i = 0; i < 10; i++) {
+		for ( j = 0; j < 25000000; j++) {
+			i++;
+			i--;
+		}
+		printf(".");
+	}
+
+	gotoxy(30, 10);
+    	printf("Sign out successfully..\n");
+
+    	gotoxy(0, 20);
+    	printf("press any key to continue..");
+
+
+	initTermios(0);	
+	getchar();
+	resetTermios();		
 }
 
 //*******************
