@@ -6,14 +6,21 @@
 #define gotoxy(x,y) printf("\033[%d;%dH", (y),(x))
 
 // Declaring all the functions
+
+// Level 1 
 void account(void);
-void initTermios(int echo);
-void resetTermios(void);
-void accountCreated(void);
 void login(void);
+// Level 2
+void accountCreated(void);
 void loginsu(void);
 void display(char*);
-
+// Level 3
+void checkBalance(char*);
+void transferMoney(void);
+void logout(void);
+// Level 4
+void initTermios(int echo);
+void resetTermios(void);
 // Creating a structure to store data of the user
 struct pass {
     char username[50];
@@ -31,15 +38,26 @@ struct pass {
 struct userpass {
     char password[50];
 };
+
+// Structure to keep track of amount transfer
+struct money {
+    char usernameto[50];
+    char userpersonfrom[50];
+    long int money1;
+};
 // This struct is used to change the i/o settings 
 static struct termios old, current;
 
+//*******************
+//Level 0
+//*******************
 int main() {
+	system("clear");
 
 	int i,a,b,choice;
 	int passwordlength;
 
-	gotoxy(18,5);
+	gotoxy(20,3);
 
 	printf("WELCOME TO BANK ACCOUNT SYSTEM\n\n");
     	gotoxy(18, 5);	
@@ -68,10 +86,25 @@ int main() {
 			printf("\n\n USERNAME 50 CHARACTERS MAX!!");
        		 	printf("\n\n PASSWORD 50 CHARACTERS MAX!!");
         		account();
-        		break;		
+        		break;
+		case 2:
+			login();
+			break;
+		case 3:
+			system("clear");
+			exit(0);
+			break;
+			
+			initTermios(0);	
+			getchar();
+			resetTermios();		
 	}
 
 }
+
+//*******************
+//Level 1
+//*******************
 
 // Function to create accounts of users
 void account (void) {
@@ -151,57 +184,13 @@ void account (void) {
 	accountCreated();
 }
 
-
-/* Initialize new terminal i/o settings */
-void initTermios(int echo) {
-	tcgetattr(0, &old);	/* grab old terminal i/o settings */
-	current = old; 		/* make new settings same as old settings */
-  	current.c_lflag &= ~ICANON;	/* disable buffered i/o */
-  	if (echo) {
-      		current.c_lflag |= ECHO; 	/* set echo mode */
-  	} else {
-      		current.c_lflag &= ~ECHO; 	/* set no echo mode */
-  	}
-  		tcsetattr(0, TCSANOW, &current); 	/* use these new terminal i/o settings now */
-}
-
-/* Restore old terminal i/o settings */
-void resetTermios(void) {
-  	tcsetattr(0, TCSANOW, &old);
-}
-
-//successful account creation
-void accountCreated(void) {
-	int i;
-	char ch;
-
-	system("clear");
-	printf("PLEASE WAIT....\n\nYOUR DATA IS PROCESSING...." );
-
-	for ( i = 0; i < 200000000; i++ ) {
-		i++;
-		i--;
-	}
-
-	gotoxy(30,10);
-	printf("ACCOUNT CREATED SUCCESSFULY....");
-
-	gotoxy(0,20);
-	printf("Press enter to login\n");
-
-	initTermios(0);
-	getchar();
-	resetTermios();
-
-	login();
-}
-
+// Login Function
 void login(void) {
 	system("clear");
 
 	char username[50];
 	char password[50];
-	int i,j,k;
+	int i,j,k,c;
 	char ch;
 	FILE *fp,*fu;
 	struct pass u1;
@@ -225,6 +214,9 @@ void login(void) {
 	gotoxy(35, 12);
     	printf("USERNAME.. ");
     	scanf("%s", &username);
+
+	//clear the input buffer
+	while ((c = getchar()) != '\n' && c != EOF) { }
 
     	gotoxy(35, 14);
     	printf("PASSWORD..");
@@ -253,9 +245,41 @@ void login(void) {
     	fclose(fp);
 }
 
+
+//*******************
+//Level 2
+//*******************
+
+//successful account creation
+void accountCreated(void) {
+	int i;
+	char ch;
+
+	system("clear");
+	printf("PLEASE WAIT....\n\nYOUR DATA IS PROCESSING...." );
+
+	for ( i = 0; i < 200000000; i++ ) {
+		i++;
+		i--;
+	}
+
+	gotoxy(30,10);
+	printf("ACCOUNT CREATED SUCCESSFULY....");
+
+	gotoxy(0,20);
+	printf("Press enter to login\n");
+
+	initTermios(0);
+	getchar();
+	resetTermios();
+
+	login();
+}
+
+
 // Redirect after successful login
 void loginsu(void) {
-	int i;
+	int i,c;
 	FILE *fp;
 	struct pass u1;
 
@@ -274,6 +298,9 @@ void loginsu(void) {
 	initTermios(0);
 	getchar();
 	resetTermios();
+
+	//clear the input buffer
+	//while ((c = getchar()) != '\n' && c != EOF) { }
 }
 
 // Display function to show the data of the user on screen
@@ -281,7 +308,7 @@ void display(char username1[]) {
 	system("clear");
 
 	FILE *fp;
-	int choice ,i;
+	int choice ,i,c;
 
 	fp = fopen("username.txt","rb");
 	struct pass u1;
@@ -354,20 +381,36 @@ void display(char username1[]) {
     	printf(" ENTER YOUR CHOICES..");
     	scanf("%d", &choice);	
 
+	//clear the input buffer
+	while ((c = getchar()) != '\n' && c != EOF) { }
+
 	switch (choice) {
     		case 1:
         		checkBalance(username1);
         		break;
+		case 2:
+			transferMoney();
+			break;
+		case 3:
+			logout();
+			login();
+			break;
 
     		case 4:
+			system("clear");
         		exit(0);
         		break;
     	}
+
 }
+
+//*******************
+//Level 3
+//*******************
 
 // Function to check balance in users account
 void checkBalance(char username2[]) {
-	system ("clear");
+	system("clear");
 
 	FILE *fm;
 	struct money m1;
@@ -422,4 +465,131 @@ void checkBalance(char username2[]) {
 	// Closing file after reading it
     	fclose(fm);
     	display(username2);
-}	
+}
+
+void transferMoney(void)
+{
+	int i,j;
+	FILE *fm, *fp;
+	struct pass u1;
+	struct money m1;
+	char usernamet[20];
+	char usernamep[20];
+	
+	system("clear");
+
+	// Opening file in read mode to read user's username
+	fp = fopen("username.txt", "rb");
+
+	// Creating a another file to write amount along with username to which amount is going to be transferred
+    	fm = fopen("mon.txt", "ab");
+
+	gotoxy(33, 4);
+    	printf("---- TRANSFER MONEY ----");
+    	gotoxy(33, 5);
+    	printf("========================");
+
+    	gotoxy(33, 11);
+    	printf("FROM (your username).. ");
+    	scanf("%s", &usernamet);
+
+    	gotoxy(33, 13);
+    	printf(" TO (username of person)..");
+    	scanf("%s", &usernamep);
+
+	// Checking for username if it is present in file or not
+	while (fread(&u1, sizeof(u1),1, fp)) {
+        	if (strcmp(usernamep,u1.username) == 0) {
+            		strcpy(m1.usernameto,u1.username);
+			strcpy(m1.userpersonfrom,usernamet);
+        	}
+    	}
+
+	gotoxy(33, 16);
+	// Taking amount input
+    	printf("ENTER THE AMOUNT TO BE TRANSFERRED..");
+    	scanf("%d", &m1.money1);
+
+	// Writing to the file
+   	fwrite(&m1, sizeof(m1),1, fm);
+
+	gotoxy(0, 26);
+    	printf(	"--------------------------------------------------"
+        	"--------------------------------------------");
+	gotoxy(0, 28);
+    	printf(	"--------------------------------------------------"
+        	"--------------------------------------------");
+	gotoxy(0, 29);
+    	printf("transferring amount, Please wait..");
+
+	gotoxy(10, 27);
+	for (i = 0; i < 70; i++) {
+        	for (j = 0; j < 1200000; j++) {
+            		j++;
+            		j--;
+        	}
+        	printf("*");
+    	}
+
+	gotoxy(33, 40);
+    	printf("AMOUNT SUCCESSFULLY TRANSFERRED....");
+	initTermios(0);	
+	getchar();
+	resetTermios();		
+
+	// Close the files
+    	fclose(fp);
+    	fclose(fm);
+
+	// Function to return to the home screen
+    	display(usernamet);
+
+}
+
+void logout(void) {
+	int i,j;
+
+	system("clear");
+	printf("please wait, logging out");
+
+	for( i = 0; i < 10; i++) {
+		for ( j = 0; j < 25000000; j++) {
+			i++;
+			i--;
+		}
+		printf(".");
+	}
+
+	gotoxy(30, 10);
+    	printf("Sign out successfully..\n");
+
+    	gotoxy(0, 20);
+    	printf("press any key to continue..");
+
+
+	initTermios(0);	
+	getchar();
+	resetTermios();		
+}
+
+//*******************
+//Level 4
+//*******************
+
+/* Initialize new terminal i/o settings */
+void initTermios(int echo) {
+	tcgetattr(0, &old);	/* grab old terminal i/o settings */
+	current = old; 		/* make new settings same as old settings */
+  	current.c_lflag &= ~ICANON;	/* disable buffered i/o */
+  	if (echo) {
+      		current.c_lflag |= ECHO; 	/* set echo mode */
+  	} else {
+      		current.c_lflag &= ~ECHO; 	/* set no echo mode */
+  	}
+  		tcsetattr(0, TCSANOW, &current); 	/* use these new terminal i/o settings now */
+}
+
+/* Restore old terminal i/o settings */
+void resetTermios(void) {
+  	tcsetattr(0, TCSANOW, &old);
+}
