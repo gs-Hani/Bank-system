@@ -52,11 +52,12 @@ static struct termios old, current;
 //Level 0
 //*******************
 int main() {
+	system("clear");
 
 	int i,a,b,choice;
 	int passwordlength;
 
-	gotoxy(18,5);
+	gotoxy(20,3);
 
 	printf("WELCOME TO BANK ACCOUNT SYSTEM\n\n");
     	gotoxy(18, 5);	
@@ -90,6 +91,7 @@ int main() {
 			login();
 			break;
 		case 3:
+			system("clear");
 			exit(0);
 			break;
 			
@@ -188,7 +190,7 @@ void login(void) {
 
 	char username[50];
 	char password[50];
-	int i,j,k;
+	int i,j,k,c;
 	char ch;
 	FILE *fp,*fu;
 	struct pass u1;
@@ -212,6 +214,9 @@ void login(void) {
 	gotoxy(35, 12);
     	printf("USERNAME.. ");
     	scanf("%s", &username);
+
+	//clear the input buffer
+	while ((c = getchar()) != '\n' && c != EOF) { }
 
     	gotoxy(35, 14);
     	printf("PASSWORD..");
@@ -274,7 +279,7 @@ void accountCreated(void) {
 
 // Redirect after successful login
 void loginsu(void) {
-	int i;
+	int i,c;
 	FILE *fp;
 	struct pass u1;
 
@@ -293,6 +298,9 @@ void loginsu(void) {
 	initTermios(0);
 	getchar();
 	resetTermios();
+
+	//clear the input buffer
+	//while ((c = getchar()) != '\n' && c != EOF) { }
 }
 
 // Display function to show the data of the user on screen
@@ -300,7 +308,7 @@ void display(char username1[]) {
 	system("clear");
 
 	FILE *fp;
-	int choice ,i;
+	int choice ,i,c;
 
 	fp = fopen("username.txt","rb");
 	struct pass u1;
@@ -373,6 +381,9 @@ void display(char username1[]) {
     	printf(" ENTER YOUR CHOICES..");
     	scanf("%d", &choice);	
 
+	//clear the input buffer
+	while ((c = getchar()) != '\n' && c != EOF) { }
+
 	switch (choice) {
     		case 1:
         		checkBalance(username1);
@@ -386,9 +397,11 @@ void display(char username1[]) {
 			break;
 
     		case 4:
+			system("clear");
         		exit(0);
         		break;
     	}
+
 }
 
 //*******************
